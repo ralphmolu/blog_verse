@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { User } = require('../models');
+const { User } = require('../models/userModel');
 const router = require('express').Router();
 
 //Here we are handling user signup, login and logout

@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { Post } = require('../models');
+const { Post } = require('../models/postModel');
 
-//handling of CRUD operations of Posts
+//handling CRUD operations of Posts
 
 //create new post
 router.post('/', async (req, res) => {
@@ -11,9 +11,9 @@ router.post('/', async (req, res) => {
             content: req.body.content,
             userId: red.session.user_id
         });
-        res.json(newPost);
+        res.redirect('/posts'); 
     } catch (err) {
-        res.status(500), json(err);
+        res.status(500).render('error', { error: err });
     }
 });
 
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const allPosts = await Post.findAll();
-        res.json(allPosts);
+        res.render('posts', { posts: allPosts });
     } catch (err) {
         res.status(500).json(err);
     }
@@ -30,21 +30,21 @@ router.get('/', async (req, res) => {
 //update a post by id
 router.put('/:id', async (req, res) => {
     try {
-        const updatedPost = await Post.update(req.body, {
+        const [updatedPost] = await Post.update(req.body, {
             where: {
                 id: req.params.id
             }
         });
 
         //check if the post exist
-        if (updatedPost) {
-            res.json({ message: 'Post successfully updated!' });
+        if (updatedPost > 0) {
+            res.redirect('/posts');
         } else {
-            res.status(404).json({ message: 'Post not found!' });
+            res.status(404).render('error', { error: 'Post not found!' });
         }
 
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).render('error', { error: err });
     }
 });
 
@@ -57,9 +57,9 @@ router.delete('/:id', async (req, res) => {
             }
         });
         if (result) {
-            res.json({ message: 'Post successfully deleted!' });
+            res.redirect('/posts');
         } else {
-            res.status(500).json({ message: 'POst not found!' });
+            res.status(500).render('error', { error: err });
         }
     } catch (err) {
         res.status(500).json(err);

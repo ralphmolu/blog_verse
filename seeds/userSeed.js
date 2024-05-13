@@ -1,4 +1,5 @@
-const { User } = require('../models');
+const  User = require('../models/userModel');
+const bcrypt = require('bcrypt');
 
 const userData = [
     {
@@ -35,6 +36,9 @@ const seedUser = async () => {
         user.password = hashedPassword
     }
     
-    await User.bulkCreate(userData);
+    await User.bulkCreate(userData, {
+      individualHooks: true,
+      returning: true
+    });
 }
 module.exports = seedUser;

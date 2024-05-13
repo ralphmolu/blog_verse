@@ -1,0 +1,28 @@
+{{> navbar}} <!-- Assuming you have a navbar partial for navigation -->
+
+<div class="container mt-4">
+    <h1 class="mb-4">Blog Posts</h1>
+    {{#each posts}}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <p class="card-text">{{this.content}}</p>
+            <a href="/posts/{{this.id}}" class="btn btn-primary">Read More</a>
+            <!-- Add buttons for edit/delete if the user is authorized -->
+            {{#if ../loggedIn}}
+            <a href="/posts/edit/{{this.id}}" class="btn btn-secondary">Edit</a>
+            <button class="btn btn-danger delete-post-button" data-post-id="{{this.id}}">Delete</button>
+            {{/if}}
+        </div>
+        <div class="card-footer text-muted">
+            Posted on {{post.createdAt}}
+        </div>
+    </div>
+    {{else}}
+    <p>No posts to display.</p>
+    {{/each}}
+</div>
+
+<script>
+
+</script>
