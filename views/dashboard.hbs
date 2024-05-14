@@ -1,0 +1,15 @@
+{{> navbar}}
+<main class="container mt-3">
+    <h2>Your Posts</h2>
+    {{#each posts}}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <p class="card-text">{{this.content}}</p>
+            <a href="/edit/{{this.id}}" class="btn btn-warning">Edit</a>
+            <button class="btn btn-danger delete-post" data-id="{{this.id}}">Delete</button>
+        </div>
+    </div>
+    {{/each}}
+</main>
+{{> footer}}

@@ -1,15 +1,16 @@
 const router = require('express').Router();
-const { Post } = require('../models/postModel');
+const { Post } = require('../../models/postModel');
+const withAuth = require('../../util/auth')
 
 //handling CRUD operations of Posts
 
 //create new post
-router.post('/', async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
     try {
         const newPost = await Post.create({
             title: req.body.title,
             content: req.body.content,
-            userId: red.session.user_id
+            userId: req.session.user_id
         });
         res.redirect('/posts'); 
     } catch (err) {
@@ -28,7 +29,7 @@ router.get('/', async (req, res) => {
 });
 
 //update a post by id
-router.put('/:id', async (req, res) => {
+router.put('/:id', withAuth, async (req, res) => {
     try {
         const [updatedPost] = await Post.update(req.body, {
             where: {
@@ -49,17 +50,18 @@ router.put('/:id', async (req, res) => {
 });
 
 //delete a post by id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', withAuth, async (req, res) => {
     try {
         const result = await Post.destroy({
             where: {
                 id: req.params.id
             }
         });
+
         if (result) {
             res.redirect('/posts');
         } else {
-            res.status(500).render('error', { error: err });
+            res.status(404).render('error', { error: err });
         }
     } catch (err) {
         res.status(500).json(err);

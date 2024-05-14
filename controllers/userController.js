@@ -1,11 +1,9 @@
 const bcrypt = require('bcrypt');
 const { User } = require('../models/userModel');
-const router = require('express').Router();
 
-//Here we are handling user signup, login and logout
+//Here we are handling user signup, login and logout logic
 
-// User registration
-router.post('/signup', async (req, res)=> {
+const registerUser = async (req, res)=> {
     try{
         const newUser = await User.create({
             username: req.body.username,
@@ -18,16 +16,15 @@ router.post('/signup', async (req, res)=> {
             req.session.user_id = newUser.id;
             req.session.logged_in = true;
 
-            req.status(200).json({ user: newUser, message: 'You have successfully logged in!'});
+            res.status(200).json({ user: newUser, message: 'You have successfully logged in!'});
         });
 
     }catch(err){
         res.status(500).json(err)
     }
-});
+};
 
-//User login
-router.post('/login', async (req, res) => {
+const loginUser = async (req, res) => {
     try {
         const userData = await User.findOne({
             where: {
@@ -61,17 +58,20 @@ router.post('/login', async (req, res) => {
     } catch (err){
         res.status(500).json(err);
     }
-});
+};
 
-// user logout
-router.post('/logout', (req, res) => {
+const logoutUser = (req, res) => {
     if(req.session.logged_in){
         req.session.destroy(()=>{
-            req.status(204).end();
+            res.status(204).end();
         });
     } else {
         res.status(404).end();
     }
-});
+};
 
-module.exports = router;
+module.exports = {
+    registerUser,
+    loginUser,
+    logoutUser
+};
