@@ -5,7 +5,7 @@ const path = require('path');
 const routes = require('./controllers');
 const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-// const helpers = require('./util')
+const helpers = require('./util/helpers');
 
 
 
@@ -22,12 +22,12 @@ const sess = {
     })
 };
 
-// const hbs = exphbs.create({ helpers });
+const hbs = exphbs.create({ helpers });
 
 //middlewares
 app.use(session(sess));
 
-// app.engine('handlebars', hbs.engine);
+app.engine('handlebars', hbs.engine);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 
